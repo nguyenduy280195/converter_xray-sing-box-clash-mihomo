@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DuyPro • All-in-One Converter for Box Magisk</title>
+  <style>
+    :root {
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --accent: #3b82f6;
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1f2937;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1e1b4b 0%, var(--bg) 60%);
+      color: var(--text);
+      padding: 24px 16px;
+      max-width: 840px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+      margin-bottom: 10px;
+    }
+    .header-container {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 26px;
+      margin: 0 0 8px 0;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    p.desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin: 0;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #38bdf8;
+      display: block;
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      border-radius: 10px;
+      background: #090d16;
+      border: 1px solid #26334d;
+      color: #e2e8f0;
+      padding: 14px;
+      font-family: "Fira Code", Consolas, monospace;
+      font-size: 13px;
+      box-sizing: border-box;
+      resize: vertical;
+      transition: 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+    }
+    button:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #1f293d;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      box-shadow: none;
+    }
+    .btn-secondary:hover {
+      background: #27354f;
+      color: #fff;
+    }
+
+    /* Tabs phong cách 3 kernel */
+    .tabs-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 10px;
+    }
+    .tab-btn {
+      background: #131b2e;
+      border: 1px solid #26334d;
+      color: #94a3b8;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: none;
+      transition: 0.2s;
+    }
+    .tab-btn:hover {
+      background: #1e293b;
+      color: #f1f5f9;
+      transform: none;
+    }
+    .tab-btn.active-singbox {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+    .tab-btn.active-xray {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: #06b6d4;
+      color: #38bdf8;
+    }
+    .tab-btn.active-clash {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    .status-msg {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #4ade80;
+      min-height: 20px;
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-container">
+    <div class="brand-badge">DUY NGUYỄN • OFFICIAL TOOL</div>
+    <h1>⚡ DUYPRO ALL-IN-ONE CONVERTER ⚡</h1>
+    <p class="desc">Chuyển đổi VMess / VLESS cho Box for Magisk (Sing-box • Xray • Clash Meta YAML)</p>
+  </div>
+
+  <div class="card">
+    <label for="inputLink">📥 Dán Link Node (VMess hoặc VLESS):</label>
+    <textarea id="inputLink" rows="4" placeholder="vmess://... hoặc vless://..."></textarea>
+
+    <div class="btn-group">
+      <button onclick="processConvert()">⚡ Chuyển Đổi Ngay</button>
+      <button class="btn-secondary" onclick="copyResult()">📋 Sao Chép</button>
+      <button class="btn-secondary" onclick="downloadConfig()">💾 Tải file cấu hình</button>
+      <button class="btn-secondary" onclick="clearAll()" style="margin-left:auto;">🗑️ Xóa</button>
+    </div>
+
+    <div id="status" class="status-msg"></div>
+  </div>
+
+  <div class="card">
+    <div class="tabs-header">
+      <button id="tabBtnSingbox" class="tab-btn active-singbox" onclick="switchKernel('singbox')">📦 Sing-box (1.14+)</button>
+      <button id="tabBtnXray" class="tab-btn" onclick="switchKernel('xray')">⚡ Xray (26+)</button>
+      <button id="tabBtnClash" class="tab-btn" onclick="switchKernel('clash')">🐱 Clash / Meta (YAML)</button>
+    </div>
+
+    <label id="outputLabel" for="outputContent">📤 Cấu hình xuất ra (Sing-box 1.14+ • config.json):</label>
+    <textarea id="outputContent" rows="18" readonly placeholder="Bấm 'Chuyển Đổi Ngay' để tạo cấu hình..."></textarea>
+  </div>
+
+  <footer>
+    <p>© 2026 Bản quyền thuộc về <strong>Duy Nguyễn (Duypro)</strong> • Tối ưu hóa cho Box for Magisk</p>
+  </footer>
+
+  <script>
+    let currentKernel = 'singbox';
+    let resultCache = {
+      singbox: '',
+      xray: '',
+      clash: ''
+    };
+
+    function isIp(addr) {
+      return /^(\d{1,3}\.){3}\d{1,3}$/.test(addr);
+    }
+
+    /* ========================================================
+       1. LOGIC XRAY CONVERTER
+    ======================================================== */
+    function buildXrayTemplate(outboundProxy) {
+      return {
+        log: { loglevel: "warning" },
+        fakedns: [{ ipPool: "198.18.0.0/15", poolSize: 10000 }],
+        dns: {
+          servers: [
+            "fakedns",
+            "https://1.1.1.1/dns-query",
+            "https://8.8.8.8/dns-query"
+          ]
+        },
+        inbounds: [
+          {
+            tag: "tproxy-in",
+            port: 7893,
+            protocol: "dokodemo-door",
+            settings: { network: "tcp,udp", followRedirect: true },
+            sniffing: { enabled: true, destOverride: ["http", "tls", "fakedns"] },
+            streamSettings: { sockopt: { tproxy: "tproxy" } }
+          },
+          {
+            tag: "dns-in",
+            port: 1053,
+            protocol: "dokodemo-door",
+            settings: { network: "tcp,udp", address: "1.1.1.1", port: 53 }
+          }
+        ],
+        outbounds: [
+          outboundProxy,
+          { tag: "dns-out", protocol: "dns" },
+          { tag: "direct", protocol: "freedom" }
+        ],
+        routing: {
+          domainStrategy: "IPIfNonMatch",
+          rules: [
+            { type: "field", inboundTag: ["dns-in"], outboundTag: "dns-out" },
+            { type: "field", port: "53", network: "udp,tcp", outboundTag: "dns-out" },
+            { type: "field", inboundTag: ["tproxy-in"], outboundTag: "proxy" }
+          ]
+        }
+      };
+    }
+
+    function parseVmessXray(data) {
+      const net = data.net || "tcp";
+      const sni = data.sni || data.host || "";
+      const host = data.host || data.sni || "";
+      const path = data.path || "/";
+      const alpn = data.alpn ? data.alpn.split(",").map(s => s.trim()) : ["h2", "http/1.1"];
+
+      let stream = { network: net };
+      if (data.tls === "tls") {
+        stream.security = "tls";
+        stream.tlsSettings = { serverName: sni, alpn: alpn, fingerprint: data.fp || "chrome" };
+      }
+
+      if (net === "xhttp") {
+        stream.xhttpSettings = { mode: "auto", path: path, host: host };
+      } else if (net === "ws") {
+        stream.wsSettings = { path: path, headers: { Host: host } };
+      } else if (net === "grpc") {
+        stream.grpcSettings = { serviceName: path, multiMode: true };
+      }
+
+      return {
+        tag: "proxy",
+        protocol: "vmess",
+        settings: {
+          vnext: [{
+            address: data.add,
+            port: parseInt(data.port),
+            users: [{ id: data.id, alterId: parseInt(data.aid || 0), security: "auto" }]
+          }]
+        },
+        streamSettings: stream
+      };
+    }
+
+    function parseVlessXray(url, params) {
+      const net = params.get("type") || "tcp";
+      const sec = params.get("security") || "none";
+      const sni = params.get("sni") || params.get("host") || "";
+      const host = params.get("host") || params.get("sni") || "";
+      const path = decodeURIComponent(params.get("path") || "/");
+      const alpn = params.get("alpn") ? params.get("alpn").split(",").map(s => s.trim()) : ["h2", "http/1.1"];
+      const fp = params.get("fp") || "chrome";
+
+      let stream = { network: net };
+      if (sec === "tls") {
+        stream.security = "tls";
+        stream.tlsSettings = { serverName: sni, alpn: alpn, fingerprint: fp };
+      } else if (sec === "reality") {
+        stream.security = "reality";
+        stream.realitySettings = {
+          serverName: sni,
+          fingerprint: fp,
+          publicKey: params.get("pbk") || "",
+          shortId: params.get("sid") || "",
+          spiderX: decodeURIComponent(params.get("spx") || "")
+        };
+      }
+
+      if (net === "xhttp") {
+        stream.xhttpSettings = { mode: "auto", path: path, host: host };
+      } else if (net === "ws") {
+        stream.wsSettings = { path: path, headers: { Host: host } };
+      } else if (net === "grpc") {
+        stream.grpcSettings = { serviceName: path, multiMode: true };
+      }
+
+      let user = { id: url.username, encryption: "none" };
+      if (params.get("flow")) user.flow = params.get("flow");
+
+      return {
+        tag: "proxy",
+        protocol: "vless",
+        settings: {
+          vnext: [{
+            address: url.hostname,
+            port: parseInt(url.port || 443),
+            users: [user]
+          }]
+        },
+        streamSettings: stream
+      };
+    }
+
+    /* ========================================================
+       2. LOGIC SING-BOX (1.14+) CONVERTER
+    ======================================================== */
+    function buildSingboxTemplate(tag, server, nodeOutbound) {
+      const rules = [
+        { action: "sniff" },
+        { protocol: "dns", action: "hijack-dns" },
+        { port: [53], action: "hijack-dns" },
+        { ip_is_private: true, outbound: "direct" }
+      ];
+
+      if (isIp(server)) {
+        rules.push({ ip_cidr: [server + "/32"], outbound: "direct" });
+      }
+
+      return {
+        log: { disabled: false, level: "warn", timestamp: true },
+        dns: {
+          servers: [
+            { tag: "dns-remote", type: "tcp", server: "8.8.8.8", server_port: 53, detour: tag },
+            { tag: "dns-direct", type: "local" }
+          ],
+          rules: [
+            { clash_mode: "Direct", server: "dns-direct" },
+            { clash_mode: "Global", server: "dns-remote" }
+          ],
+          final: "dns-remote",
+          strategy: "prefer_ipv4"
+        },
+        inbounds: [
+          { type: "tproxy", tag: "tproxy-in", listen: "::", listen_port: 9898 },
+          { type: "mixed", tag: "mixed-in", listen: "127.0.0.1", listen_port: 2080 }
+        ],
+        outbounds: [
+          { type: "selector", tag: "select", outbounds: [tag, "direct"], default: tag },
+          nodeOutbound,
+          { type: "direct", tag: "direct", domain_resolver: "dns-direct" },
+          { type: "block", tag: "block" }
+        ],
+        route: {
+          default_domain_resolver: "dns-remote",
+          rules: rules,
+          final: "select",
+          auto_detect_interface: true
+        },
+        experimental: {
+          clash_api: {
+            external_controller: "0.0.0.0:9090",
+            external_ui: "/data/adb/box/ui",
+            secret: "",
+            default_mode: "rule"
+          }
+        }
+      };
+    }
+
+    function parseVmessSingbox(data) {
+      const tag = data.ps || 'duy';
+      const server = data.add;
+      const port = parseInt(data.port) || 80;
+      const net = (data.net || 'ws').toLowerCase();
+      const host = data.host || data.sni || "";
+      const sni = data.sni || data.host || "";
+      const path = data.path || "/";
+
+      const node = {
+        type: "vmess",
+        tag: tag,
+        server: server,
+        server_port: port,
+        uuid: data.id,
+        security: data.scy || "auto",
+        alter_id: parseInt(data.aid || 0)
+      };
+
+      if (net === 'ws') {
+        node.transport = { type: "ws", path: path, headers: host ? { Host: host } : {} };
+      } else if (net === 'grpc') {
+        node.transport = { type: "grpc", service_name: path || host || "" };
+      }
+
+      if (data.tls === 'tls' || port === 443) {
+        node.tls = { enabled: true, server_name: sni };
+        if (data.fp) node.tls.utls = { enabled: true, fingerprint: data.fp };
+        if (data.insecure === '1' || data.insecure === true) node.tls.insecure = true;
+      }
+
+      return { tag, server, node };
+    }
+
+    function parseVlessSingbox(url, params) {
+      const tag = decodeURIComponent(url.hash ? url.hash.substring(1) : 'proxy') || 'proxy';
+      const server = url.hostname;
+      const port = parseInt(url.port || 443);
+      const net = (params.get("type") || "tcp").toLowerCase();
+      const sec = (params.get("security") || "none").toLowerCase();
+      const host = params.get("host") || params.get("sni") || "";
+      const sni = params.get("sni") || params.get("host") || "";
+      const path = decodeURIComponent(params.get("path") || "/");
+      const flow = params.get("flow");
+      const fp = params.get("fp");
+
+      const node = {
+        type: "vless",
+        tag: tag,
+        server: server,
+        server_port: port,
+        uuid: url.username
+      };
+
+      if (flow) node.flow = flow;
+
+      if (net === 'ws') {
+        node.transport = { type: "ws", path: path, headers: host ? { Host: host } : {} };
+      } else if (net === 'grpc') {
+        node.transport = { type: "grpc", service_name: decodeURIComponent(params.get("serviceName") || path || "") };
+      }
+
+      if (sec === 'tls') {
+        node.tls = { enabled: true, server_name: sni };
+        if (fp) node.tls.utls = { enabled: true, fingerprint: fp };
+        if (params.get("insecure") === '1') node.tls.insecure = true;
+      } else if (sec === 'reality') {
+        node.tls = {
+          enabled: true,
+          server_name: sni,
+          reality: { enabled: true, public_key: params.get("pbk") || "", short_id: params.get("sid") || "" }
+        };
+        if (fp) node.tls.utls = { enabled: true, fingerprint: fp };
+      }
+
+      return { tag, server, node };
+    }
+
+    /* ========================================================
+       3. LOGIC CLASH / CLASH META (YAML) CONVERTER
+    ======================================================== */
+    function buildClashTemplate(proxyName, proxyYaml) {
+      return `tproxy-port: 7893
+bind-address: "*"
+mode: rule
+allow-lan: true
+log-level: silent
+external-controller: 0.0.0.0:9090
+external-ui: yacd-gh-pages
+unified-delay: true
+ipv6: false
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:1053
+  enhanced-mode: fake-ip
+  fake-ip-range: 28.0.0.0/8
+  use-hosts: true
+  nameserver:
+    - https://cloudflare-dns.com/dns-query
+proxies:
+${proxyYaml}
+proxy-groups:
+  - name: DUY-NGUYEN
+    type: select
+    proxies:
+      - "${proxyName}"
+      - DIRECT
+rules:
+  - MATCH,DUY-NGUYEN`;
+    }
+
+    function parseVmessClash(data) {
+      const name = data.ps || 'duy';
+      const server = data.add;
+      const port = parseInt(data.port) || 80;
+      const uuid = data.id;
+      const alterId = parseInt(data.aid || 0);
+      const cipher = data.scy || "auto";
+      const isTls = data.tls === 'tls' || port === 443;
+      const sni = data.sni || data.host || "";
+      const host = data.host || data.sni || "";
+      const path = data.path || "/";
+      const net = (data.net || 'ws').toLowerCase();
+
+      let yaml = `  - name: "${name}"\n`;
+      yaml += `    server: ${server}\n`;
+      yaml += `    port: ${port}\n`;
+      yaml += `    type: vmess\n`;
+      yaml += `    uuid: ${uuid}\n`;
+      yaml += `    alterId: ${alterId}\n`;
+      yaml += `    cipher: ${cipher}\n`;
+      yaml += `    tls: ${isTls}\n`;
+      yaml += `    skip-cert-verify: true\n`;
+      if (sni) yaml += `    servername: ${sni}\n`;
+      yaml += `    network: ${net}\n`;
+      if (net === 'ws') {
+        yaml += `    ws-opts:\n`;
+        yaml += `      path: "${path}"\n`;
+        if (host) {
+          yaml += `      headers:\n`;
+          yaml += `        Host: ${host}\n`;
+        }
+      } else if (net === 'grpc') {
+        yaml += `    grpc-opts:\n`;
+        yaml += `      grpc-service-name: "${path || host}"\n`;
+      }
+      yaml += `    udp: true`;
+
+      return { name, yaml };
+    }
+
+    function parseVlessClash(url, params) {
+      const name = decodeURIComponent(url.hash ? url.hash.substring(1) : 'duy') || 'duy';
+      const server = url.hostname;
+      const port = parseInt(url.port || 443);
+      const uuid = url.username;
+      const net = (params.get("type") || "tcp").toLowerCase();
+      const sec = (params.get("security") || "none").toLowerCase();
+      const isTls = sec === 'tls' || sec === 'reality' || port === 443;
+      const sni = params.get("sni") || params.get("host") || "";
+      const host = params.get("host") || params.get("sni") || "";
+      const path = decodeURIComponent(params.get("path") || "/");
+      const flow = params.get("flow");
+
+      let yaml = `  - name: "${name}"\n`;
+      yaml += `    server: ${server}\n`;
+      yaml += `    port: ${port}\n`;
+      yaml += `    type: vless\n`;
+      yaml += `    uuid: ${uuid}\n`;
+      yaml += `    cipher: auto\n`;
+      yaml += `    tls: ${isTls}\n`;
+      yaml += `    skip-cert-verify: true\n`;
+      if (sni) yaml += `    servername: ${sni}\n`;
+      if (flow) yaml += `    flow: ${flow}\n`;
+      yaml += `    network: ${net}\n`;
+
+      if (sec === 'reality') {
+        yaml += `    reality-opts:\n`;
+        yaml += `      public-key: ${params.get("pbk") || ""}\n`;
+        if (params.get("sid")) yaml += `      short-id: ${params.get("sid")}\n`;
+      }
+
+      if (net === 'ws') {
+        yaml += `    ws-opts:\n`;
+        yaml += `      path: "${path}"\n`;
+        if (host) {
+          yaml += `      headers:\n`;
+          yaml += `        Host: ${host}\n`;
+        }
+      } else if (net === 'grpc') {
+        yaml += `    grpc-opts:\n`;
+        yaml += `      grpc-service-name: "${decodeURIComponent(params.get("serviceName") || path)}"\n`;
+      }
+      yaml += `    udp: true`;
+
+      return { name, yaml };
+    }
+
+    /* ========================================================
+       4. XỬ LÝ CHUYỂN ĐỔI TOÀN DIỆN
+    ======================================================== */
+    function processConvert() {
+      const link = document.getElementById("inputLink").value.trim();
+      const status = document.getElementById("status");
+      status.innerText = "";
+
+      if (!link) {
+        alert("Vui lòng dán link VMess hoặc VLESS vào ô trước!");
+        return;
+      }
+
+      try {
+        if (link.startsWith("vmess://")) {
+          let b64 = link.replace("vmess://", "").trim();
+          b64 = b64.replace(/-/g, "+").replace(/_/g, "/");
+          while (b64.length % 4) b64 += "=";
+          const data = JSON.parse(decodeURIComponent(escape(atob(b64))));
+
+          // 1. Xray
+          const xrayOutbound = parseVmessXray(data);
+          resultCache.xray = JSON.stringify(buildXrayTemplate(xrayOutbound), null, 2);
+
+          // 2. Sing-box
+          const { tag, server, node } = parseVmessSingbox(data);
+          resultCache.singbox = JSON.stringify(buildSingboxTemplate(tag, server, node), null, 2);
+
+          // 3. Clash Meta YAML
+          const { name, yaml } = parseVmessClash(data);
+          resultCache.clash = buildClashTemplate(name, yaml);
+
+        } else if (link.startsWith("vless://")) {
+          const url = new URL(link);
+          const params = new URLSearchParams(url.search);
+
+          // 1. Xray
+          const xrayOutbound = parseVlessXray(url, params);
+          resultCache.xray = JSON.stringify(buildXrayTemplate(xrayOutbound), null, 2);
+
+          // 2. Sing-box
+          const { tag, server, node } = parseVlessSingbox(url, params);
+          resultCache.singbox = JSON.stringify(buildSingboxTemplate(tag, server, node), null, 2);
+
+          // 3. Clash Meta YAML
+          const { name, yaml } = parseVlessClash(url, params);
+          resultCache.clash = buildClashTemplate(name, yaml);
+
+        } else {
+          alert("Link không hợp lệ! Phải bắt đầu bằng vmess:// hoặc vless://");
+          return;
+        }
+
+        renderOutput();
+        status.innerText = "✅ Đã chuyển đổi thành công cho cả 3 Kernel (Sing-box, Xray, Clash)!";
+      } catch (e) {
+        alert("Lỗi khi chuyển đổi: " + e.message);
+      }
+    }
+
+    function switchKernel(kernel) {
+      currentKernel = kernel;
+      const btnSb = document.getElementById("tabBtnSingbox");
+      const btnXr = document.getElementById("tabBtnXray");
+      const btnCl = document.getElementById("tabBtnClash");
+      const label = document.getElementById("outputLabel");
+
+      btnSb.className = "tab-btn";
+      btnXr.className = "tab-btn";
+      btnCl.className = "tab-btn";
+
+      if (kernel === 'singbox') {
+        btnSb.className = "tab-btn active-singbox";
+        label.innerText = "📤 Cấu hình xuất ra (Sing-box 1.14+ • config.json):";
+      } else if (kernel === 'xray') {
+        btnXr.className = "tab-btn active-xray";
+        label.innerText = "📤 Cấu hình xuất ra (Xray 26+ • config.json):";
+      } else if (kernel === 'clash') {
+        btnCl.className = "tab-btn active-clash";
+        label.innerText = "📤 Cấu hình xuất ra (Clash / Meta • config.yaml):";
+      }
+      renderOutput();
+    }
+
+    function renderOutput() {
+      const output = document.getElementById("outputContent");
+      output.value = resultCache[currentKernel] || '';
+    }
+
+    function copyResult() {
+      const text = document.getElementById("outputContent").value;
+      if (!text) return alert("Chưa có cấu hình để sao chép!");
+      navigator.clipboard.writeText(text).then(() => {
+        let name = "Sing-box";
+        if (currentKernel === 'xray') name = "Xray";
+        if (currentKernel === 'clash') name = "Clash (YAML)";
+        const status = document.getElementById("status");
+        status.innerText = `📋 Đã sao chép cấu hình ${name} vào khay nhớ tạm!`;
+      });
+    }
+
+    function downloadConfig() {
+      const text = document.getElementById("outputContent").value;
+      if (!text) return alert("Chưa có cấu hình để tải về!");
+
+      let fileName = "config.json";
+      let mimeType = "application/json";
+
+      if (currentKernel === 'clash') {
+        fileName = "config.yaml";
+        mimeType = "text/yaml";
+      }
+
+      const blob = new Blob([text], { type: mimeType });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+    }
+
+    function clearAll() {
+      document.getElementById("inputLink").value = "";
+      document.getElementById("outputContent").value = "";
+      document.getElementById("status").innerText = "";
+      resultCache.singbox = "";
+      resultCache.xray = "";
+      resultCache.clash = "";
+    }
+  </script>
+</body>
+</html>
